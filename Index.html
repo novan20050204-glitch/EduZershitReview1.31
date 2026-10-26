@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>哲學與教育的本質 — 選擇題練習</title>
+  <meta name="description" content="哲學與教育的本質 W2–W7 五大單元選擇題考試練習，涵蓋 Knight、Scheffler、Noddings 等核心理論。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== 核心色彩體系 Midnight Dark Theme ===== */
+    :root {
+      --bg-canvas:     #070b14;
+      --bg-card:       #0b1329;
+      --bg-glass:      rgba(15, 23, 42, 0.75);
+      --bg-hover:      rgba(30, 41, 59, 0.70);
+      --border:        rgba(255, 255, 255, 0.08);
+      --border-glow:   rgba(255, 255, 255, 0.18);
+
+      --blue:          #38bdf8;
+      --teal:          #2dd4bf;
+      --green:         #34d399;
+      --pink:          #fb7185;
+      --amber:         #fbbf24;
+      --violet:        #a78bfa;
+      --indigo:        #818cf8;
+
+      --text-primary:  #e2e8f0;
+      --text-secondary:#94a3b8;
+      --text-muted:    #64748b;
+
+      --correct:       #34d399;
+      --wrong:         #fb7185;
+      --neutral:       #fbbf24;
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: 'Noto Sans TC', 'Inter', sans-serif;
+      line-height: 1.85;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== 星空粒子背景 ===== */
+    #star-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+    }
+
+    /* ===== 頁面佈局 ===== */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 24px 100px;
+    }
+
+    /* ===== 頁首 Header ===== */
+    .site-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .site-header .tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.30);
+      border-radius: 20px;
+      padding: 4px 16px;
+      margin-bottom: 20px;
+    }
+
+    .site-header h1 {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      line-height: 1.25;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--violet) 50%, var(--pink) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+    }
+
+    .site-header .subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto;
+      text-wrap: pretty;
+    }
+
+    /* ===== 進度儀表板 ===== */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .stat-card:hover { border-color: var(--border-glow); transform: translateY(-2px); }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label { font-size: 13px; color: var(--text-secondary); }
+
+    #stat-total  .stat-value { color: var(--blue); }
+    #stat-done   .stat-value { color: var(--violet); }
+    #stat-correct .stat-value { color: var(--correct); }
+    #stat-wrong  .stat-value { color: var(--wrong); }
+
+    /* ===== 進度條 ===== */
+    .progress-wrap {
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      height: 6px;
+      margin-bottom: 48px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--blue), var(--violet));
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ===== 單元區塊 Section ===== */
+    .unit-section {
+      margin-bottom: 48px;
+    }
+
+    .unit-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .unit-badge {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      border: 2px solid;
+    }
+
+    .unit-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .unit-desc { font-size: 15px; color: var(--text-secondary); }
+
+    /* 單元顏色 */
+    .unit-1 .unit-badge { color: var(--blue);   border-color: var(--blue);   background: rgba(56,189,248,0.10); }
+    .unit-2 .unit-badge { color: var(--violet); border-color: var(--violet); background: rgba(167,139,250,0.10); }
+    .unit-3 .unit-badge { color: var(--green);  border-color: var(--green);  background: rgba(52,211,153,0.10); }
+    .unit-4 .unit-badge { color: var(--pink);   border-color: var(--pink);   background: rgba(251,113,133,0.10); }
+    .unit-5 .unit-badge { color: var(--amber);  border-color: var(--amber);  background: rgba(251,191,36,0.10); }
+
+    .unit-1 .unit-title { color: var(--blue); }
+    .unit-2 .unit-title { color: var(--violet); }
+    .unit-3 .unit-title { color: var(--green); }
+    .unit-4 .unit-title { color: var(--pink); }
+    .unit-5 .unit-title { color: var(--amber); }
+
+    /* ===== 題目卡片 ===== */
+    .question-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+      background: linear-gradient(180deg, var(--blue), var(--violet));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .question-card:hover { border-color: var(--border-glow); }
+    .question-card:hover::before { opacity: 1; }
+
+    .question-card.answered-correct { border-color: rgba(52,211,153,0.45); }
+    .question-card.answered-correct::before { background: var(--correct); opacity: 1; }
+    .question-card.answered-wrong   { border-color: rgba(251,113,133,0.45); }
+    .question-card.answered-wrong::before { background: var(--wrong); opacity: 1; }
+
+    .q-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .q-num {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    .q-diff {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 99px;
+    }
+
+    .diff-easy   { background: rgba(52,211,153,0.15); color: var(--green); }
+    .diff-medium { background: rgba(251,191,36,0.15); color: var(--amber); }
+    .diff-hard   { background: rgba(251,113,133,0.15); color: var(--pink); }
+
+    .q-text {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.7;
+      margin-bottom: 22px;
+      text-wrap: pretty;
+    }
+
+    /* ===== 選項 ===== */
+    .options-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      user-select: none;
+    }
+
+    .option-item:hover:not(.disabled) {
+      background: var(--bg-hover);
+      border-color: var(--border-glow);
+      transform: translateX(4px);
+    }
+
+    .option-item.disabled { cursor: default; }
+
+    .option-letter {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .option-text {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--text-primary);
+      text-wrap: pretty;
+    }
+
+    /* 選項狀態 */
+    .option-item.selected-correct {
+      background: rgba(52, 211, 153, 0.12);
+      border-color: var(--correct);
+    }
+    .option-item.selected-correct .option-letter {
+      background: var(--correct);
+      border-color: var(--correct);
+      color: #000;
+    }
+
+    .option-item.selected-wrong {
+      background: rgba(251, 113, 133, 0.12);
+      border-color: var(--wrong);
+    }
+    .option-item.selected-wrong .option-letter {
+      background: var(--wrong);
+      border-color: var(--wrong);
+      color: #fff;
+    }
+
+    .option-item.reveal-correct {
+      background: rgba(52, 211, 153, 0.07);
+      border-color: rgba(52, 211, 153, 0.40);
+    }
+    .option-item.reveal-correct .option-letter {
+      border-color: var(--correct);
+      color: var(--correct);
+    }
+
+    /* ===== 解析區 ===== */
+    .explanation {
+      display: none;
+      margin-top: 18px;
+      padding: 16px 20px;
+      background: rgba(30, 41, 59, 0.60);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      text-wrap: pretty;
+    }
+
+    .explanation.visible { display: block; animation: fadeIn 0.35s ease; }
+    .explanation .key-term { color: var(--blue); font-weight: 600; }
+    .explanation .correct-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--correct);
+      background: rgba(52,211,153,0.15);
+      padding: 2px 10px;
+      border-radius: 99px;
+      margin-bottom: 8px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== 控制按鈕區 ===== */
+    .quiz-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-top: 56px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 30px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+
+    .btn:active { transform: scale(0.96); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(56,189,248,0.30);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 28px rgba(56,189,248,0.50); transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: var(--bg-hover);
+      border: 1px solid var(--border-glow);
+      color: var(--text-primary);
+    }
+    .btn-secondary:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-2px); }
+
+    /* ===== 結果彈窗 ===== */
+    #result-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 11, 20, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #result-modal.open { display: flex; }
+
+    .result-box {
+      background: #0b1329;
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .result-emoji { font-size: 64px; margin-bottom: 16px; }
+
+    .result-title {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .result-score {
+      font-size: 52px;
+      font-weight: 900;
+      margin: 16px 0;
+    }
+
+    .result-detail { font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; }
+
+    /* ===== 返回頂部 ===== */
+    #back-top {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 16px rgba(56,189,248,0.40);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.2s;
+      z-index: 100;
+    }
+    #back-top.visible { opacity: 1; }
+    #back-top:hover { transform: translateY(-3px); }
+
+    /* ===== 響應式 ===== */
+    @media (max-width: 640px) {
+      .page-wrapper { padding: 28px 16px 80px; }
+      .question-card { padding: 20px 18px; }
+      .q-text { font-size: 16px; }
+      .option-text { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="star-canvas"></canvas>
+
+<div class="page-wrapper">
+
+  <!-- ===== 頁首 ===== -->
+  <header class="site-header">
+    <div class="tag">📚 師培 × 教育哲學 練習題庫</div>
+    <h1>哲學與教育的本質<br>選擇題精練</h1>
+    <p class="subtitle">涵蓋 W2–W7 五大單元核心理論，點擊選項即可立即得到解析。<br>由課本《教育哲學導論》Knight 等原典精煉而成。</p>
+  </header>
+
+  <!-- ===== 進度儀表板 ===== -->
+  <div class="dashboard">
+    <div class="stat-card" id="stat-total">
+      <div class="stat-value" id="val-total">40</div>
+      <div class="stat-label">題目總數</div>
+    </div>
+    <div class="stat-card" id="stat-done">
+      <div class="stat-value" id="val-done">0</div>
+      <div class="stat-label">已作答</div>
+    </div>
+    <div class="stat-card" id="stat-correct">
+      <div class="stat-value" id="val-correct">0</div>
+      <div class="stat-label">答對</div>
+    </div>
+    <div class="stat-card" id="stat-wrong">
+      <div class="stat-value" id="val-wrong">0</div>
+      <div class="stat-label">答錯</div>
+    </div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+  <!-- ===== 單元一 ===== -->
+  <section class="unit-section unit-1">
+    <div class="unit-header">
+      <div class="unit-badge">W2</div>
+      <div>
+        <div class="unit-title">單元一：哲學與教育的本質（Knight 導論）</div>
+        <div class="unit-desc">Mindlessness、3M 體系、概念分析、學校角色</div>
+      </div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 01</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">Charles Silberman 等學者觀察當代美國教育，指出其最深刻的病態是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教師薪資過低，導致人才流失</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">「心靈貧乏／渾渾噩噩」（Mindlessness）——只問如何做，不問為何做</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">學生基礎學力下滑，閱讀與數學能力不足</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">科技發展過快，教師無法適應數位轉型</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        課程引用 Silberman 的觀察：當代教育最深刻的病態是 <span class="key-term">Mindlessness（心靈貧乏）</span>，指教育界汲汲營營於「如何做（How）」的技術細節，卻極少追問「為何做（Why）」的根本目的。
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 02</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">Knight 指出，教育工作者過度關注「動態與活動（Motion）」而忽視「進步（Progress）」，這反映了哪一種根本性錯誤？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">課程設計不夠多元化</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教師缺乏實習機會</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">推崇「手段（Means）」卻遺忘了「目的（Ends）」</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">標準化測驗過多</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        教育病因在於 <span class="key-term">Means vs. Ends</span> 的失衡——教育工作者過度推崇手段（教學技術、測驗工具），而遺忘了教育的根本目的（Ends）。
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 03</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Knight 提出的「教育人文學（Humanities of Education）」包含哪三個核心學科？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教育史、教育哲學、教育文學</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教育社會學、教育心理學、教育統計學</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">課程設計、教學方法學、班級經營</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">比較教育學、行政管理、校舍建築</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        <span class="key-term">教育人文學（Humanities of Education）</span>包含：教育史、教育哲學、教育文學。雖難展現立即效益，但提供無可替代的「終極效益（Ultimate Utility）」。
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 04</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Logan LaPlante 所區分的教育終極目標是引導學生達成什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">Making a living（謀生）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">Making a test（考試）</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">Making a career（事業）</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">Making a life（過有意義的人生）</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        LaPlante 指出，教育終極目標是 <span class="key-term">Making a life（過有意義的人生）</span>，而非僅僅是 Making a living（謀生）。Kristjánsson 也強調應「為生命的考驗做好準備」而非「一生只為了考試」。
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 05</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">依據課程的概念分析，下列哪一項最精確地描述「教育（Education）」與「訓練（Training）」的核心差異？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教育發生於學校，訓練發生於職場</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教育引發反省性思考與理智理解力，訓練是刺激–反應式的非反省性舉動</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">教育由國家主導，訓練由企業負責</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">教育時間較長，訓練時間較短</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        <span class="key-term">訓練（Training）</span>是刺激–反應式、不假思索的非反省性舉動；<span class="key-term">真正的教育</span>核心在於引發 Reflective thinking（反省性思考）與理智理解力的發展。
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 06</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">Knight 的「4M 四大目的」中，哪一項屬於「澄清有關生命與教育目標的思考」？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">熟悉教育的基本問題（Bedrock questions）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">評估各種解決方案</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">澄清有關生命與教育目標的思考</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">發展內在一致且能與真實世界結合的個人教育哲學</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        Knight 四大目的（實為四項）包含：(1) 熟悉基本問題、(2) 評估解決方案、(3) 澄清生命與教育目標的思考、(4) 發展個人教育哲學。本題直接對應第(3)項。
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 07</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">「學習（Learning）」與「學校教育（Schooling）」最關鍵的差異是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">學習較深入，學校教育較膚淺</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">學習由老師主導，學校教育由學生主動</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">學習只發生於成年人，學校教育只針對兒童</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">學習可發生於任何時地（含不經意的學習），學校教育特指學校機構內的正規教育</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        <span class="key-term">學習（Learning）</span>是廣義的行為改變歷程，包含不經意的學習（Inadvertent learning），可發生於任何時地；<span class="key-term">學校教育（Schooling）</span>特指在學校機構中受特定制度約束的正規教育。
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 08</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Knight 的 3M 體系中，「Activities（活動）」面向包含哪四項哲學功能？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">綜合（Synthesizing）、思辨（Speculating）、規範（Prescribing）、分析（Analysing）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">自覺、整全性、洞察力、彈性變通</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">形上學、知識論、價值論、倫理學</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">教育史、哲學、文學、社會學</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        3M 中 <span class="key-term">Activities（活動）</span>包含四大哲學功能：綜合（建立世界觀）、思辨（超越經驗探索終極）、規範（設定道德美學標準）、分析（澄清語言與邏輯）。選項 B 是「Attitudes（態度）」面向，選項 C 是「Content（內容）」面向。
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 單元二 ===== -->
+  <section class="unit-section unit-2">
+    <div class="unit-header">
+      <div class="unit-badge">W3</div>
+      <div>
+        <div class="unit-title">單元二：哲學的本質與健全論證</div>
+        <div class="unit-desc">哲學 vs 辯論、哲學 vs 科學、健全論證三要件</div>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 09</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">「哲學（Philosophy）」一詞源自希臘文，字面意義為何？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">探索宇宙的科學</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">熱愛自然的人</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">愛好智慧（philia 愛 + sophia 智慧）</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">追求真理的論辯</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        <span class="key-term">Philosophy</span> 源自希臘文 philia（愛）+ sophia（智慧），即「愛好智慧」。但單純熱情不足以成為哲學家，還需高度自律的理性探究歷程。
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 10</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">哲學思考與「辯論（Debate）」最本質的差異在於哪一點？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">哲學思考不需要語言，辯論需要語言</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">辯論以勝負為導向、立場預設；哲學思考以真理澄清與概念精準為核心，須彈性改變立場</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">哲學思考是團體活動，辯論是個人行為</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">辯論需要更高的邏輯能力</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        <span class="key-term">辯論</span>以勝負為導向，立場往往預先設定；<span class="key-term">哲學思考</span>以真理的澄清與概念的精準為核心，探求者必須具備自覺與彈性，隨時準備依據充分的理性論據改變立場。
+      </div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 11</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">下列哪一個問題屬於「哲學問題」而非「科學問題」？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">水的沸點在標準氣壓下是多少度？</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">光速的精確數值是多少？</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">台灣的失業率是多少？</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">何謂知識的真確性？我們應該如何生活？</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        <span class="key-term">科學問題</span>處理可由感官觀察、實驗與數據回答的事實（Descriptive/Empirical）；<span class="key-term">哲學問題</span>處理概念、架構與價值（Normative/Conceptual），如「何謂知識」、「我們應如何生活」，這些無法靠測量儀器回答。
+      </div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 12</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">「健全論證（Sound Argument）」需要同時滿足哪三項要件？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">邏輯有效性（Validity）、前提真確性（Factuality）、無形式與非形式謬誤（Avoidance of Fallacies）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">雄辯口才、充分的舉例、有效的說服技巧</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">形上學立場、知識論假設、價值論框架</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">綜合性、規範性、分析性</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        健全論證三要件：(1) <span class="key-term">邏輯有效性</span>（前提為真則結論必然為真）、(2) <span class="key-term">前提真確性</span>（前提需符合實情）、(3) <span class="key-term">無謬誤</span>（避免循環論證、訴諸權威、人身攻擊等邏輯陷阱）。
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 13</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">哲學思考的成果通常是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">給出終極封閉的標準答案，解決所有問題</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">設計出可驗證的科學實驗</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">思想的邏輯澄清、揭露隱含假設、開擴認知視野、建立內在一致的分析框架</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">取得社會共識並付諸政策行動</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        哲學思考的成果不是給出封閉的終極答案，而是實現<span class="key-term">思想的邏輯澄清（Logical clarification of thoughts）</span>、隱含假設的揭露、認知視野的開擴，以及為複雜問題建立內在一致的分析框架。
+      </div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 14</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">3M 體系中「Attitudes（態度）」面向包含哪四個哲學態度？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">綜合、思辨、規範、分析</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">自覺（Self-awareness）、整全性（Comprehensiveness）、洞察力（Penetration）、彈性變通（Flexibility）</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">形上學、知識論、倫理學、美學</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">有效性、真確性、無謬誤、一致性</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        3M 的 <span class="key-term">Attitudes（態度）</span>包含：自覺（真誠面對個人偏見）、整全性（綜覽全體現象）、洞察力（深入表象背後的原理）、彈性變通（面對充分證據時願意改變立場）。
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 單元三 ===== -->
+  <section class="unit-section unit-3">
+    <div class="unit-header">
+      <div class="unit-badge">W5</div>
+      <div>
+        <div class="unit-title">單元三：教育中的哲學課題（形上學、知識論、價值論）</div>
+        <div class="unit-desc">Bedrock Questions 在教育中的具體展現</div>
+      </div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 15</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">「形上學（Metaphysics）」的核心問題是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">什麼是真實的（What is real?）與實體的本質</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">什麼是美？什麼是醜？</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">我們如何認識？知識的來源是什麼？</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">道德善惡的標準是什麼？</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        <span class="key-term">形上學（Metaphysics）</span>探討「什麼是真實的（What is real?）」與實體的本質。其子領域包含宇宙論、神學、哲學人類學、本體論等。
+      </div>
+    </div>
+
+    <!-- Q16 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 16</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">盧梭《愛彌兒》與孟子的人性論，在教育上屬於哪一種哲學人類學立場？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">性惡論——人性需透過外部規範矯治</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">性空論——人性無善無惡，由環境塑造</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">性善論——教育應順應自然，兒童天性如草木萌芽</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">性定論——人性由基因決定，教育無法改變</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        <span class="key-term">性善論</span>（盧梭、孟子）認為兒童天性如草木萌芽，教育應順應自然、鼓舞中心喜悅。相對地，荀子與原罪觀屬性惡論，認為需藉禮法與紀律矯治。
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 17</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">課程提出知識的「五大來源」，下列哪一項被特別標記為具有「超越性」？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">感官經驗</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">理性邏輯</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">權威</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">天啟（Revelation）</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        五大知識來源中，<span class="key-term">天啟（Revelation）</span>被特別標記為具超越性，<span class="key-term">直覺／頓悟（Intuition）</span>則被標記為靈光乍現。文本強調各來源具互補性（Complementary nature）。
+      </div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 18</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">「經驗論假定」對教學方法的啟示，在歷史上促成了哪位教育家的直觀教學法？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">蘇格拉底的產婆法</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">康米紐斯（Comenius）的《世界圖解》直觀教學法與戶外實地教學</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">杜威（Dewey）的問題解決法</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">盧梭的自然教育法</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        <span class="key-term">經驗論假定</span>促成了 <span class="key-term">Comenius（康米紐斯）</span>《世界圖解》的直觀教學法與戶外實地教學；理性論與產婆法則認為知識存於內在，教師作為心靈產婆引導詰問。
+      </div>
+    </div>
+
+    <!-- Q19 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 19</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">關於「美學（Aesthetics）與教育」，下列哪一敘述最符合課程立場？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">美感判斷完全主觀，因此美感教育無任何客觀標準可言</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">美感教育僅是課外活動，與核心學科無關</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">美感判斷若非全然主觀，則美感教育即具備客觀培養的價值，旨在提升學生的審美洞察力</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">美感等同於感官快感，無需刻意培養</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        課程區分純粹感官的「快感」與具精神提升的「<span class="key-term">美感</span>」。如果美感判斷非全然主觀，則美感教育即具備客觀培養的價值，旨在提升學生的審美洞察力與生命品質。
+      </div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 20</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">為什麼社會對「教師私德」的要求往往高於醫生等其他專業？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教師必須以身作則，提供良好的身教示範供學生模仿與內化</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教師薪資由公費支付，接受更高的社會監督</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">法規規定教師必須遵守更嚴格的倫理守則</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">教師比醫生接觸更多媒體曝光</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        課程從<span class="key-term">教育倫理學</span>角度指出，社會對教師私德的要求高於醫生等專業，理由在於教師必須「以身作則」，提供良好的身教示範供學生模仿與內化。
+      </div>
+    </div>
+
+    <!-- Q21 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 21</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">本體論（Ontology）在教育中的核心作用是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">決定學生的學習評量方式</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">規範教師的行政管理行為</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">界定學校建築空間的設計原則</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">決定課程中何種知識被視為最具實體價值的核心內容</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        <span class="key-term">本體論／存有學（Ontology）</span>研究存在（Being）的本質，在教育上決定了課程中何種知識被視為最具實體價值的核心內容，直接影響課程選材與優先順序。
+      </div>
+    </div>
+
+    <!-- Q22 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 22</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">「宗教學校（Religion schools）的設立」最直接反映了哪一哲學範疇的信念？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">知識論（Epistemology）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">形上學中的神學（Theology）——對終極實體與生命意義的特定信念</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">美學（Aesthetics）</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">倫理學（Ethics）</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        宗教學校的設立，深刻反映了形上學中<span class="key-term">神學（Theology）</span>範疇對終極實體、生命意義與人類在宇宙中角色的特定信念。
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 單元四 ===== -->
+  <section class="unit-section unit-4">
+    <div class="unit-header">
+      <div class="unit-badge">W6</div>
+      <div>
+        <div class="unit-title">單元四：分析哲學與教育（20 世紀哲學革命）</div>
+        <div class="unit-desc">維特根斯坦、Scheffler 隱喻分析、口號分析、Soltis 雙鏡比喻</div>
+      </div>
+    </div>
+
+    <!-- Q23 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 23</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">維特根斯坦（Wittgenstein）對哲學本質的著名比喻是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">雄心勃勃地建造一幢宏偉的思想大廈</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">用望遠鏡俯瞰宇宙全景</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">不是建造一幢房子，而是謙虛地打掃一間房間</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">用顯微鏡檢視語言的細部構造</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        <span class="key-term">維特根斯坦</span>的著名比喻：「哲學家的職責不是雄心勃勃地建造一幢房子，而是謙虛地打掃一間房間」，強調哲學的任務在於澄清概念，而非建構宏大理論。
+      </div>
+    </div>
+
+    <!-- Q24 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 24</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">分析哲學家常問的兩大核心問題是哪兩個？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">「What do you mean by X?」（概念澄清）與「How do you know? / Why?」（理由證成）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">「什麼是真實的？」與「什麼是善的？」</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">「如何提升教學效率？」與「如何設計課程？」</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">「宇宙是如何起源的？」與「神是否存在？」</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        分析哲學的兩大核心問題：(1) <span class="key-term">What do you mean by X?</span>（概念與定義的澄清）；(2) <span class="key-term">How do you know? / Why?</span>（透過健全論證進行理由證成 Justification）。
+      </div>
+    </div>
+
+    <!-- Q25 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 25</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Israel Scheffler 分析的「塑造（Molding）」教育隱喻，其核心意象為何？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教師為產婆，由內引出天生觀念</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教師順應大理石紋理切磋琢磨</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">教育即有機體的自然生長</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">學生為泥土，教師依固定模型塑造人格</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        Scheffler 四大教育隱喻：接生（產婆由內引出）、<span class="key-term">塑造（學生為泥土，依固定模型塑造）</span>、雕刻（順應大理石紋理）、生長（有機體自然生長）。
+      </div>
+    </div>
+
+    <!-- Q26 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 26</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Scheffler 指出，教育口號（如「沒有教不會的學生，只有不會教的老師」）的本質問題是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">口號太過學術，學生無法理解</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">口號是訴諸熱情與情緒的確認，而非冷靜思量，可能使教育界陷入激情擁護</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">口號缺乏具體的實施方案</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">口號侵犯教師的工作尊嚴</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        <span class="key-term">Scheffler</span> 指出，口號是「訴諸熱情與情緒的確認」而非冷靜思量。分析哲學透過概念解析，警惕偏激或似是而非的口號，避免教育界陷入激情擁護。
+      </div>
+    </div>
+
+    <!-- Q27 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 27</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">J. F. Soltis 的「雙鏡比喻」中，「望遠鏡」代表什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">分析哲學——精細解析微觀概念與語言細節</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">科學方法——精確測量自然現象</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">傳統系統哲學——宏觀綜覽宇宙與人生的整體圖景</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">後現代主義——解構一切宏大敘事</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        <span class="key-term">Soltis 雙鏡比喻</span>：顯微鏡代表「分析哲學」（精細解析微觀概念）；望遠鏡代表「傳統系統哲學」（宏觀綜覽宇宙與人生）。兩者功用不同、無法互相取代，應交相為用。
+      </div>
+    </div>
+
+    <!-- Q28 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 28</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">分析哲學「革命性轉向」對傳統哲學最重大的挑戰是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">認為哲學任務不在建造宏大理論，而在對語言及命題進行邏輯分析、澄清意義、區分有無意義的命題</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">否定形上學存在任何價值</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">主張用數學公式代替語言哲學</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">認為科學可以完全取代哲學</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        <span class="key-term">分析哲學</span>的革命性轉向：哲學的任務不在於建造宏大的理論大廈，而在於對日常語言及科學命題進行邏輯分析，澄清意義，區分「有意義」與「無意義」的命題。
+      </div>
+    </div>
+
+    <!-- Q29 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 29</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">分析哲學在教育上揭露了哪一種常見的「語文陷阱」？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">使用過多外來語彙</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">口語化而缺乏學術嚴謹性</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">忽略學生的母語學習</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">將「規範性宣稱（Prescriptive）」偽裝成「描述性事實（Descriptive）」</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        教育分析哲學（如李奉儒的分析取向）針對「需求」、「讀經」等宣稱進行分析，揭露將<span class="key-term">規範性宣稱（Prescriptive）</span>偽裝成<span class="key-term">描述性事實（Descriptive）</span>的語文陷阱。
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 單元五 ===== -->
+  <section class="unit-section unit-5">
+    <div class="unit-header">
+      <div class="unit-badge">W7</div>
+      <div>
+        <div class="unit-title">單元五：教學的概念分析（Teaching 的邏輯地理）</div>
+        <div class="unit-desc">Passmore 三合一結構、Komisar 三層意涵、Scheffler 判準、Ryle 動詞分析、Noddings 修正</div>
+      </div>
+    </div>
+
+    <!-- Q30 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 30</span><span class="q-diff diff-easy">基礎</span></div>
+      <p class="q-text">John Passmore 所提出的「教學三合一（Triadic）結構」包含哪三個要素？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">課程（Curriculum）、評量（Assessment）、教室（Classroom）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教師（T）、學生（S）、內容/目標（X）</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">知識（Knowledge）、技能（Skill）、態度（Attitude）</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">意向性、合理性、態度判準</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        <span class="key-term">Passmore 教學三合一結構</span>：T（教師 Teacher）↔ S（學生 Student）↔ X（內容/目標 Objective）。Passmore 強調教學者必須同時調和對「學生」與對「所教科目」的雙重尊重。
+      </div>
+    </div>
+
+    <!-- Q31 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 31</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Komisar 將「教學」區分為三層意涵，「職業（Occupation）」層次的例子是？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教師在課堂上解釋一道數學定理</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教師在一節課內講述、板書、發問、維護秩序的一連串行動組合</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">「我在高中任教」——作為謀生手段的教職工作</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">教師向學生展示某個實驗操作步驟</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        <span class="key-term">Komisar 三層意涵</span>：職業（Occupation，如「我在高中任教」）、事業（Enterprise，一節課內的一連串行動組合）、行動（Activity，課堂內具體的某個特定教學表現）。
+      </div>
+    </div>
+
+    <!-- Q32 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 32</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Scheffler「意向性判準（Intentionality）」的作用是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">區分「教學事業」與夜市小販示範抹布等「狀似教學的行動」</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">評估教師所選擇的教學策略是否合理</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">區分「教學」與「灌輸／洗腦」</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">衡量學生的學習成就是否達標</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        <span class="key-term">意向性判準（Intentionality）</span>：教師意圖引發學生的學習。此判準可用以區分「教學事業」與夜市小販示範抹布等「狀似教學的行動」。「態度/理性判準」才是用於區分教學與灌輸的判準。
+      </div>
+    </div>
+
+    <!-- Q33 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 33</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">Scheffler 三大判準中，哪一項判準被用以嚴格區分「教學」與「灌輸／洗腦（Indoctrination）」？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">意向性判準（Intentionality）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">合理性判準（Reasonableness）</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">有效性判準（Validity）</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">態度／理性判準（Manner/Rationality）</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        <span class="key-term">態度／理性判準（Manner/Rationality）</span>：教師的作為必須符合尊重學生理性主體與判斷力的要求，藉此嚴格區分「教學」與「灌輸／洗腦 Indoctrination」。
+      </div>
+    </div>
+
+    <!-- Q34 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 34</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">Gilbert Ryle 的動詞分析中，「尋找（seek）」和「奔跑（race）」屬於哪一類動詞？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">成就動詞（Achievement verb）</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">工作動詞（Task verb）——描述企圖達成目標的活動</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">狀態動詞（State verb）</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">意向動詞（Intentional verb）</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        <span class="key-term">工作動詞（Task verb）</span>描述企圖達成目標的活動，如：尋找（seek）、競賽（race）、奔跑。相對地，「發現（find）」、「獲勝（win）」才是成就動詞（Achievement verb）。
+      </div>
+    </div>
+
+    <!-- Q35 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 35</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">「教（Teaching）」在邏輯上被歸類為工作動詞（Task verb），這意味著什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">只要有「教」的行為，就必然有「學」的成果</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教師必須確保每位學生都學會，否則不算教學</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">教師認真教學但學生未學會，該活動在邏輯上依然屬於「教學活動」</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">「教」與「學」在邏輯上完全無關</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        「教（Teaching）」是工作動詞，代表企圖達成目標的活動。正如某人釣了一下午魚（工作動詞）卻未釣到魚（成就動詞），教師認真教學但學生未學會，該活動在邏輯上<span class="key-term">依然屬於「教學活動」</span>。
+      </div>
+    </div>
+
+    <!-- Q36 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 36</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Nel Noddings 對 Scheffler「標準論點」的核心修正是什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">「教學是一種雙向關係（Teaching is a relation）」，師生皆有所貢獻，不能僅由教師單向認定</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教學只需關注認知層面，情感因素不屬於教育範疇</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">教師單方面的教學表現決定了教學的成功與否</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">Scheffler 的三大判準完全不適用於現代教育</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        <span class="key-term">Noddings</span> 修正：「教學是一種雙向關係（Teaching is a relation）」，師生皆有所貢獻。「合理性判準」不能僅由教師單向認定，必須參照學生的真實反應、情感回應與互動經驗來評斷。
+      </div>
+    </div>
+
+    <!-- Q37 -->
+    <div class="question-card" data-answer="D">
+      <div class="q-meta"><span class="q-num">Q 37</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">Noddings 提出的「關懷倫理（Care Ethics）」強調教學必須從工具性操作轉化為什麼？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">以升學率為核心的績效導向教學</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">更嚴格的課程標準與評量機制</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">由教師主導的單向知識傳遞</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">建立在關懷、傾聽與相互回應基礎上的動態生命連結</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：D</span><br>
+        Noddings 主張，教學必須從單向的工具性操作，轉化為建立在<span class="key-term">關懷、傾聽與相互回應</span>基礎上的動態生命連結，體現關懷倫理（Care Ethics）的教育觀。
+      </div>
+    </div>
+
+    <!-- Q38 -->
+    <div class="question-card" data-answer="C">
+      <div class="q-meta"><span class="q-num">Q 38</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">Komisar 指出「教學是一種多樣態活動（Polymorphous activity）」，下列哪個例子最能說明「事業（Enterprise）」層次中「非直接教學行動」的存在？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教師詳細解釋方程式的推導過程</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教師提出啟發性問題引導學生思考</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">教師在一節課中「去關窗戶」或「維護秩序」</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">教師舉例說明抽象概念</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：C</span><br>
+        在「事業（Enterprise）」層次的教學事業中，包含一節課內的講述、板書、發問，以及<span class="key-term">「關窗戶、維護秩序」</span>等行動。後者並非直接教學行動，但仍屬於整體教學事業的一部分，說明教學的多樣態性質。
+      </div>
+    </div>
+
+    <!-- Q39 -->
+    <div class="question-card" data-answer="B">
+      <div class="q-meta"><span class="q-num">Q 39</span><span class="q-diff diff-hard">深究</span></div>
+      <p class="q-text">Noddings 提出「若教師在電視前講課，但電力中斷或學生完全無法接收」，這個例子的哲學意涵是？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">教師應確保技術設備正常運作</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">教學具有「同時在教且未教」的歧義性，說明教學是一種雙向關係</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">遠距教學在哲學上不算真正的教學</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">教師的意向性是教學的唯一充要條件</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：B</span><br>
+        此例突顯教學的「<span class="key-term">同時在教且未教（Ambiguity）</span>」的歧義性，說明「教學是一種雙向關係（Teaching is a relation）」——若學生完全無法接收，該活動引發是否屬於真正教學的哲學討論，師生皆有所貢獻。
+      </div>
+    </div>
+
+    <!-- Q40 -->
+    <div class="question-card" data-answer="A">
+      <div class="q-meta"><span class="q-num">Q 40</span><span class="q-diff diff-medium">進階</span></div>
+      <p class="q-text">綜合本課程所有單元，Knight 所主張的「哲學對教育的終極貢獻」最精確的描述是？</p>
+      <ul class="options-list">
+        <li class="option-item" data-opt="A"><span class="option-letter">A</span><span class="option-text">雖難展現「立即效益」，但提供無可替代的「終極效益」——協助教育工作者澄清目的、建立內在一致的個人教育哲學</span></li>
+        <li class="option-item" data-opt="B"><span class="option-letter">B</span><span class="option-text">直接提供最有效的教學技術與課程設計策略</span></li>
+        <li class="option-item" data-opt="C"><span class="option-letter">C</span><span class="option-text">解決教育行政管理的組織效率問題</span></li>
+        <li class="option-item" data-opt="D"><span class="option-letter">D</span><span class="option-text">確保學生通過標準化考試，提升教育競爭力</span></li>
+      </ul>
+      <div class="explanation">
+        <span class="correct-tag">✔ 正確答案：A</span><br>
+        Knight 的核心主張：教育哲學雖難展現「<span class="key-term">立即效益（Immediate Utility）</span>」，但其不可替代的價值在於提供「<span class="key-term">終極效益（Ultimate Utility）</span>」——協助教育工作者澄清生命與教育的目的，發展內在一致且能與真實世界結合的個人教育哲學。
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== 控制按鈕 ===== -->
+  <div class="quiz-controls">
+    <button class="btn btn-primary" id="btn-submit" onclick="showResult()">📊 查看最終成績</button>
+    <button class="btn btn-secondary" id="btn-reset" onclick="resetAll()">🔄 重新練習</button>
+    <button class="btn btn-secondary" onclick="revealAll()">💡 顯示所有答案</button>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<!-- ===== 結果彈窗 ===== -->
+<div id="result-modal">
+  <div class="result-box">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <div class="result-title">作答結果</div>
+    <div class="result-score" id="result-score" style="color:var(--blue)">0 / 40</div>
+    <div class="result-detail" id="result-detail">加油！繼續練習！</div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="closeResult()">繼續複習</button>
+      <button class="btn btn-secondary" onclick="resetAll(); closeResult()">重新作答</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 返回頂部 ===== -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回頂部">↑</button>
+
+<script>
+// ===== 星空粒子 =====
+(function() {
+  const canvas = document.getElementById('star-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    const count = Math.floor((canvas.width * canvas.height) / 5000);
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.2,
+        a: Math.random(),
+        da: (Math.random() - 0.5) * 0.005
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.a += s.da;
+      if (s.a <= 0 || s.a >= 1) s.da *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.a * 0.7})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); initStars(); });
+  resize(); initStars(); draw();
+})();
+
+// ===== 答題邏輯 =====
+let totalAnswered = 0;
+let totalCorrect  = 0;
+let totalWrong    = 0;
+const TOTAL = 40;
+
+function updateDashboard() {
+  document.getElementById('val-done').textContent    = totalAnswered;
+  document.getElementById('val-correct').textContent = totalCorrect;
+  document.getElementById('val-wrong').textContent   = totalWrong;
+  const pct = (totalAnswered / TOTAL) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+document.querySelectorAll('.question-card').forEach(card => {
+  const correct = card.dataset.answer;
+  const options  = card.querySelectorAll('.option-item');
+  const expl     = card.querySelector('.explanation');
+
+  options.forEach(opt => {
+    opt.addEventListener('click', function() {
+      if (card.classList.contains('answered-correct') || card.classList.contains('answered-wrong')) return;
+
+      const chosen = this.dataset.opt;
+      totalAnswered++;
+
+      // 標記正確選項
+      options.forEach(o => {
+        o.classList.add('disabled');
+        if (o.dataset.opt === correct && o !== this) {
+          o.classList.add('reveal-correct');
+        }
+      });
+
+      if (chosen === correct) {
+        this.classList.add('selected-correct');
+        card.classList.add('answered-correct');
+        totalCorrect++;
+      } else {
+        this.classList.add('selected-wrong');
+        card.classList.add('answered-wrong');
+        totalWrong++;
+      }
+
+      expl.classList.add('visible');
+      updateDashboard();
+    });
+  });
+});
+
+// ===== 顯示結果 =====
+function showResult() {
+  const score = totalCorrect;
+  const pct   = Math.round((score / TOTAL) * 100);
+  let emoji = '😊', detail = '';
+  if (pct >= 90)      { emoji = '🏆'; detail = '優秀！哲學基礎非常紮實，繼續保持！'; }
+  else if (pct >= 75) { emoji = '🎉'; detail = '很好！大部分概念已掌握，稍加複習即可！'; }
+  else if (pct >= 60) { emoji = '📚'; detail = '還不錯！建議針對錯題再次複習解析。'; }
+  else                { emoji = '💪'; detail = '繼續加油！多回顧每題的詳細解析，相信你可以的！'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-score').textContent = `${score} / ${TOTAL}`;
+  document.getElementById('result-score').style.color = pct >= 60 ? 'var(--correct)' : 'var(--wrong)';
+  document.getElementById('result-detail').textContent = `正確率 ${pct}%　|　${detail}`;
+  document.getElementById('result-modal').classList.add('open');
+}
+
+function closeResult() {
+  document.getElementById('result-modal').classList.remove('open');
+}
+
+// ===== 重置 =====
+function resetAll() {
+  totalAnswered = 0; totalCorrect = 0; totalWrong = 0;
+  updateDashboard();
+  document.querySelectorAll('.question-card').forEach(card => {
+    card.className = 'question-card';
+    card.querySelectorAll('.option-item').forEach(o => {
+      o.className = 'option-item';
+    });
+    const expl = card.querySelector('.explanation');
+    if (expl) expl.classList.remove('visible');
+  });
+}
+
+// ===== 顯示全部答案 =====
+function revealAll() {
+  document.querySelectorAll('.question-card').forEach(card => {
+    if (card.classList.contains('answered-correct') || card.classList.contains('answered-wrong')) return;
+    const correct = card.dataset.answer;
+    card.querySelectorAll('.option-item').forEach(o => {
+      o.classList.add('disabled');
+      if (o.dataset.opt === correct) o.classList.add('reveal-correct');
+    });
+    const expl = card.querySelector('.explanation');
+    if (expl) expl.classList.add('visible');
+    card.classList.add('answered-correct');
+    totalAnswered++;
+    totalCorrect++;
+  });
+  updateDashboard();
+}
+
+// ===== 返回頂部按鈕 =====
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('back-top');
+  btn.classList.toggle('visible', window.scrollY > 400);
+});
+</script>
+</body>
+</html>
